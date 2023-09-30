@@ -35,6 +35,12 @@ if [ "$1" = "release" ]; then
   FetchWebRelease
   if [ "$2" = "docker" ]; then
     BuildDocker
+  elif [ "$2" = "linux_musl_arm" ]; then
+    BuildReleaseLinuxMuslArm
+    MakeRelease "md5-linux-musl-arm.txt"
+  elif [ "$2" = "linux_musl" ]; then
+    BuildReleaseLinuxMusl
+    MakeRelease "md5-linux-musl.txt"
   else
     echo -e "缺乏参数"
   fi
