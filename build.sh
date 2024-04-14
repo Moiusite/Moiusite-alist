@@ -27,7 +27,14 @@ FetchWebRelease() {
   rm -rf dist.tar.gz
 }
 
+PrepareBuildDocker() {
+  echo "replace github.com/mattn/go-sqlite3 => github.com/leso-kn/go-sqlite3 v0.0.0-20230710125852-03158dc838ed" >>go.mod
+  go get gorm.io/driver/sqlite@v1.4.4
+  go mod download
+}
+
 BuildDocker() {
+  PrepareBuildDocker
   go build -o ./bin/alist -ldflags="$ldflags" -tags=jsoniter .
 }
 
@@ -35,12 +42,6 @@ if [ "$1" = "release" ]; then
   FetchWebRelease
   if [ "$2" = "docker" ]; then
     BuildDocker
-  elif [ "$2" = "linux_musl_arm" ]; then
-    BuildReleaseLinuxMuslArm
-    MakeRelease "md5-linux-musl-arm.txt"
-  elif [ "$2" = "linux_musl" ]; then
-    BuildReleaseLinuxMusl
-    MakeRelease "md5-linux-musl.txt"
   else
     echo -e "缺乏参数"
   fi
